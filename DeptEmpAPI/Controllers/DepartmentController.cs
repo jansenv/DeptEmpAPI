@@ -92,119 +92,118 @@ namespace DeptEmpAPI.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Post([FromBody] Coffee coffee)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"INSERT INTO Coffee (Title, BeanType)
-        //                                OUTPUT INSERTED.Id
-        //                                VALUES (@title, @beanType)";
-        //            cmd.Parameters.Add(new SqlParameter("@title", coffee.Title));
-        //            cmd.Parameters.Add(new SqlParameter("@beanType", coffee.BeanType));
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Department department)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO Department (DeptName)
+                                        OUTPUT INSERTED.Id
+                                        VALUES (@deptName)";
+                    cmd.Parameters.Add(new SqlParameter("@deptName", department.DeptName));
 
-        //            int newId = (int)cmd.ExecuteScalar();
-        //            coffee.Id = newId;
-        //            return CreatedAtRoute("GetCoffee", new { id = newId }, coffee);
-        //        }
-        //    }
-        //}
+                    int newId = (int)cmd.ExecuteScalar();
+                    department.Id = newId;
+                    return CreatedAtRoute("GetDepartment", new { id = newId }, department);
+                }
+            }
+        }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Put([FromRoute] int id, [FromBody] Coffee coffee)
-        //{
-        //    try
-        //    {
-        //        using (SqlConnection conn = Connection)
-        //        {
-        //            conn.Open();
-        //            using (SqlCommand cmd = conn.CreateCommand())
-        //            {
-        //                cmd.CommandText = @"UPDATE Coffee
-        //                                    SET Title = @title,
-        //                                        BeanType = @beanType
-        //                                    WHERE Id = @id";
-        //                cmd.Parameters.Add(new SqlParameter("@title", coffee.Title));
-        //                cmd.Parameters.Add(new SqlParameter("@beanType", coffee.BeanType));
-        //                cmd.Parameters.Add(new SqlParameter("@id", id));
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] Department department)
+        {
+            try
+            {
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"UPDATE Department
+                                            SET DeptName = @deptName
+                                            WHERE Id = @id";
 
-        //                int rowsAffected = cmd.ExecuteNonQuery();
-        //                if (rowsAffected > 0)
-        //                {
-        //                    return new StatusCodeResult(StatusCodes.Status204NoContent);
-        //                }
-        //                throw new Exception("No rows affected");
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        if (!CoffeeExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //}
+                        cmd.Parameters.Add(new SqlParameter("@deptname", department.DeptName));
+                        cmd.Parameters.Add(new SqlParameter("@id", id));
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete([FromRoute] int id)
-        //{
-        //    try
-        //    {
-        //        using (SqlConnection conn = Connection)
-        //        {
-        //            conn.Open();
-        //            using (SqlCommand cmd = conn.CreateCommand())
-        //            {
-        //                cmd.CommandText = @"DELETE FROM Coffee WHERE Id = @id";
-        //                cmd.Parameters.Add(new SqlParameter("@id", id));
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            return new StatusCodeResult(StatusCodes.Status204NoContent);
+                        }
+                        throw new Exception("No rows affected");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                if (!DepartmentExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
 
-        //                int rowsAffected = cmd.ExecuteNonQuery();
-        //                if (rowsAffected > 0)
-        //                {
-        //                    return new StatusCodeResult(StatusCodes.Status204NoContent);
-        //                }
-        //                throw new Exception("No rows affected");
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        if (!CoffeeExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            try
+            {
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"DELETE FROM Department WHERE Id = @id";
+                        cmd.Parameters.Add(new SqlParameter("@id", id));
 
-        //private bool CoffeeExists(int id)
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //                SELECT Id, Title, BeanType
-        //                FROM Coffee
-        //                WHERE Id = @id";
-        //            cmd.Parameters.Add(new SqlParameter("@id", id));
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            return new StatusCodeResult(StatusCodes.Status204NoContent);
+                        }
+                        throw new Exception("No rows affected");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                if (!DepartmentExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
 
-        //            SqlDataReader reader = cmd.ExecuteReader();
-        //            return reader.Read();
-        //        }
-        //    }
-        //}
+        private bool DepartmentExists(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, DeptName
+                        FROM Department
+                        WHERE Id = @id";
+
+                    cmd.Parameters.Add(new SqlParameter("@id", id));
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    return reader.Read();
+                }
+            }
+        }
     }
 }
